@@ -2,3 +2,11 @@
 non_anonymised_data_to_share.tsv
 img_train_plaintext.txt
 training.1600000.processed.noemoticon.csv
+img_valid_plaintext.txt
+full_valid_plaintext.txt
+full_train_plaintext.txt
+full_test_plaintext.txt
+img_test_plaintext.txt
+balanced_test_plaintext.txt
+emoji_map_1791.csv
+twemoji_readme.txt
