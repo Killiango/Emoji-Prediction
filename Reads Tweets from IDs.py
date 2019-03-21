@@ -92,6 +92,8 @@ def get_tweets(twapi, file):
 
             #removes the link of the tweet
             text = re.sub(r'http\S+', '', tweet.text).strip(' ')
+            #Removes if the tweet was retweeted or not
+            text = re.sub(r'\ART @\S+','', text).strip(' ')
             
             #Remove tweets where emoji is not at the end
             emoji, index = locate_emoji(emoji_pattern, text)
