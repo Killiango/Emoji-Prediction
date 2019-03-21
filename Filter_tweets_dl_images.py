@@ -30,15 +30,15 @@ def filter_tweets(file):
         for i, tweet in data.iterrows():
             image = get_image(data.iloc[i, 1])
             
-            if i > 50:   #Remove this line later
+            if i > 75:   #Remove this line later
                 break
             
-            if image == [] or len(data.iloc[i, 2].split(',')) > 1:
+            if len(image) == 0 or len(data.iloc[i, 2].split(',')) > 1:
                 rows_to_drop.append(i)
             else:
                 # Save image as 'id.png'
                 try:
-                    #io.imsave(fname= 'images\\'+ str(data.iloc[i, 0]) + '.png', arr=image)                
+                    io.imsave(fname= 'images\\'+ str(data.iloc[i, 0]) + '.png', arr=image)                
                 except:
                     rows_to_drop.append(i)
                     print('Cannot save image: %s ' %(str(data.iloc[i, 0])))
@@ -52,13 +52,14 @@ def filter_tweets(file):
     
     except:
         print('Problem occured with the program')
-        return 0           
-print('Start DL training set')
+        return 0         
+
+print('\n---Start DL training set---')
 filter_tweets(train_file)
-print('End DL training set')
-print('Start DL test set')
+print('---End DL training set---')
+print('\n---Start DL test set---')
 filter_tweets(test_file)
-print('End DL test set')
-print('Start DL val set')
+print('---End DL test set---')
+print('\n---Start DL val set---')
 filter_tweets(valid_file)
-print('Start DL val set')
+print('\n---End DL val set---')
