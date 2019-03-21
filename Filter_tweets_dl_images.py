@@ -5,9 +5,9 @@ import pandas as pd
 import numpy as np
 import skimage.io as io
 
-train_file = img_train_plaintext
-test_file = img_test_plaintext
-valid_file = img_valid_plaintext
+train_file = 'img_train_plaintext.txt'
+test_file = 'img_test_plaintext.txt'
+valid_file = 'img_valid_plaintext.txt'
 
 def get_image(url):
     # downloads images as rgb images
@@ -29,6 +29,10 @@ def filter_tweets(file):
         
         for i, tweet in data.iterrows():
             image = get_image(data.iloc[i, 1])
+            
+            if i > 50:   #Remove this line later
+                break
+            
             if image == [] or len(data.iloc[i, 2]) > 1:
                 rows_to_drop.append(i)
             else:
