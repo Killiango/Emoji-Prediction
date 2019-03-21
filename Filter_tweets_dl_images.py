@@ -29,7 +29,7 @@ def filter_tweets(file):
         
         for i, tweet in data.iterrows():
             image = get_image(data.iloc[i, 1])
-            if image == []:
+            if image == [] or len(data.iloc[i, 2]) > 1:
                 rows_to_drop.append(i)
             else:
                 # Save image as 'id.png'
