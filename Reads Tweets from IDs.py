@@ -8,11 +8,13 @@ import numpy as np
 import re
 
 
-# Generate your own at https://apps.twitter.com/app
-CONSUMER_KEY = 'q8svcQ1GKW2yknY8MCZLvcO7w'
-CONSUMER_SECRET = 'kk9eMhfIMVxoDEoKR63ddWooW87Ya7IgUt5oC31S0TpAXeiMdh'
-OAUTH_TOKEN = '917762487608659970-G1v4Nr01JQA9UKqO1HP4g4bPwKT7LAr'
-OAUTH_TOKEN_SECRET = 'p1Zp4ophwRbRvR5yET3ppXWWg7fEshIyWwby9vTBxR9CF'
+# Generate your own twitter api keys at https://apps.twitter.com/app
+secret = open('secret.txt')
+strs = secret.read().split("\n")
+CONSUMER_KEY = strs[0]
+CONSUMER_SECRET = strs[1]
+OAUTH_TOKEN = strs[2] 
+OAUTH_TOKEN_SECRET = strs[3]
 
 # connect to twitter
 auth = tweepy.OAuthHandler(CONSUMER_KEY, CONSUMER_SECRET)
@@ -40,7 +42,7 @@ def locate_emoji(emoji_pattern, text: str):
         index = -emoji_threshold
     return emoji, index
 
-def get_tweets(twapi, file):
+def get_Tweets(twapi, file):
     data = pd.read_csv(file, sep='\t', encoding = 'utf8', engine='c', header = 0)   
     '''
     Fetches content for tweet IDs in a file using bulk request method,
@@ -108,7 +110,7 @@ def get_tweets(twapi, file):
         
         #For debuging
         i += 1
-        if i == 20:
+        if i == 1:
             break
             
     features = np.array(all_tweets)
