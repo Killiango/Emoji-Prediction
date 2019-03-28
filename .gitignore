@@ -1,17 +1,12 @@
 
-non_anonymised_data_to_share.tsv
-img_train_plaintext.txt
-training.1600000.processed.noemoticon.csv
-img_valid_plaintext.txt
-full_valid_plaintext.txt
-full_train_plaintext.txt
-full_test_plaintext.txt
-img_test_plaintext.txt
 balanced_test_plaintext.txt
 emoji_map_1791.csv
+full_test_plaintext.txt
+full_train_plaintext.txt
+full_valid_plaintext.txt
+GoogleNews-vectors-negative300.bin
+img_test_plaintext.txt
+img_train_plaintext.txt
+img_valid_plaintext.txt
 twemoji_readme.txt
-*.jpg
-.ipynb_checkpoints/First Session-checkpoint.ipynb
-.ipynb_checkpoints/Reads Tweets from IDs-checkpoint.ipynb
-.ipynb_checkpoints/First Session-checkpoint.ipynb
-*.png
+word2vec.txt
