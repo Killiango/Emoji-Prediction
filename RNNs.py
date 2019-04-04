@@ -9,12 +9,12 @@ class GRU_NET():
     
     embedding_dim = 300
     
-     def __init__(self, vocab_size: int, hidden_units: int, n_features: int, n_timesteps, n_labels: int, dropout = False, optimizer):
+     def __init__(self, vocab_size: int, hidden_units: int, n_features: int, n_timesteps, labels_dim: int, dropout = False, optimizer):
         self.vocab_size = vocab_size
         self.hidden_units = hidden_units
         self.n_features = n_features
         self.n_timesteps = n_timesteps
-        self.n_labels = n_labels
+        self.labels_dim = labels_dim
         self.loss = "sparse_categorical_crossentropy" # if we want to predict word vecs instead of labels, use cosine proximity
         self.dropout = dropout
         self.optimizer = optimizer
@@ -30,7 +30,7 @@ class GRU_NET():
         if self.dropout != False:
             self.model.add(Dropout(dropout))
         
-        self.model.add(TimeDistributed(Dense(n_labels, activation = 'softmax')))
+        self.model.add(TimeDistributed(Dense(self.labels_dim, activation = 'softmax')))
         self.model.compile(loss = self.loss, optimizer = self.optimizer, metrics = ['accuracy'])
                        
     def fit(self, X_train, y_train, n_epochs, n_batches):
@@ -48,7 +48,7 @@ class LSTM_NET():
         self.hidden_units = hidden_units
         self.n_features = n_features
         self.n_timesteps = n_timesteps
-        self.n_labels = n_labels
+        self.labels_dim = labels_dim
         self.loss = "sparse_categorical_crossentropy" # if we want to predict emoji vecs instead of emoji labels, use cosine proximity
         self.dropout = dropout
         self.optimizer = optimizer
@@ -69,7 +69,7 @@ class LSTM_NET():
         if self.dropout != False:
             self.model.add(Dropout(self.dropout))
         
-        self.model.add(TimeDistributed(Dense(n_labels, activation = 'softmax')))
+        self.model.add(TimeDistributed(Dense(self.labels_dim, activation = 'softmax')))
         self.model.compile(loss = self.loss, optimizer = self.optimizer, metrics = ['accuracy'])
         
     def fit(self, X_train, y_train, n_epochs, n_batches):
