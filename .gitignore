@@ -10,3 +10,4 @@ img_train_plaintext.txt
 img_valid_plaintext.txt
 twemoji_readme.txt
 word2vec.txt
+.ipynb_checkpoints/RNN-checkpoint.ipynb
