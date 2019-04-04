@@ -30,9 +30,6 @@ def filter_tweets(file):
         for i, tweet in data.iterrows():
             image = get_image(data.iloc[i, 1])
             
-            if i > 75:   #Remove this line later
-                break
-            
             if len(image) == 0 or len(data.iloc[i, 2].split(',')) > 1:
                 rows_to_drop.append(i)
             else:
