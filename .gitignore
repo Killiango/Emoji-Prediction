@@ -16,3 +16,4 @@ word2vec.txt
 .ipynb_checkpoints/img-preproc-checkpoint.ipynb
 *.jpg
 *.png
+*.jpeg
