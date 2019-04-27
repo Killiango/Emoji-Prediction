@@ -17,3 +17,5 @@ word2vec.txt
 *.jpg
 *.png
 *.jpeg
+.ipynb_checkpoints/Reads Tweets from IDs-checkpoint.ipynb
+.ipynb_checkpoints/Reads Tweets from IDs-checkpoint.ipynb
