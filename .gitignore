@@ -30,3 +30,8 @@ Data Exploration.ipynb
 Data Exploration.ipynb
 .ipynb_checkpoints/Reads Tweets from IDs-checkpoint.ipynb
 Data Exploration.ipynb
+X_test_BoW.txt
+X_val_BoW.txt
+y_test_BoW.txt
+y_train_BoW.txt
+y_val_BoW.txt
