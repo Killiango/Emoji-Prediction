@@ -31,7 +31,7 @@ def count_emojis(data, n = 10):
 
     return [emoji[0] for emoji in sorted_emoji_counts[:n]]
 
-def emoji_to_int(labels: list):
+def emoji_to_int(labels: list, emoji_map):
     return [emoji_map[emoji] for emoji in labels]
 
 def keep_top_10(data, top_10: list): 
@@ -213,9 +213,9 @@ def text_cleaning(n_gram: tuple, min_df: int, lower = True, use_stopwords = Fals
     print("Validation: {}\n".format(len(cleaned_val_data)))
     print("Number of unique tokens in the vocabulary: {}\n".format(len(vocab)))
 
-    y_train = emoji_to_int(train_labels)
-    y_test = emoji_to_int(test_labels)
-    y_val = emoji_to_int(val_labels)
+    y_train = emoji_to_int(train_labels, emoji_map)
+    y_test = emoji_to_int(test_labels,emoji_map)
+    y_val = emoji_to_int(val_labels,emoji_map)
 
 
     X_train, X_test, X_val = bag_of_words(cleaned_train_data, cleaned_test_data, cleaned_val_data, ngram = n_gram, vocab = vocab)
