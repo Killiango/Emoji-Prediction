@@ -67,7 +67,7 @@ def classification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_ep
 
     # Build 3 machine learning models: Multi-layer Perceptron (MLP), Logistic Regression, Naive Bayes (MNB)
     MLP = get_model(X_train.shape[1], n_units, y_train.shape[1])
-    LogReg = LogisticRegression(penalty='l2', class_weight='balanced', random_state=42, solver='lbfgs', max_iter=500, multi_class='multinomial')
+    LogReg = LogisticRegression(penalty='l2', class_weight='balanced', random_state=42, solver='lbfgs', max_iter=250, multi_class='multinomial')
     MNB = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
     
     print('Models Constructed')
