@@ -37,7 +37,7 @@ for n_unit in n_units_hyper:
                 n_gram = n_gram, min_df = min_df, lower = True, use_stopwords = False, stemmer = False)
 
             # Machine Learning Classification
-            MLP_scores, Log_Reg_scores, MNB_scores = classfication(X_train, X_val, X_test, y_train, y_val, y_test,
+            MLP_scores, Log_Reg_scores, MNB_scores = classification(X_train, X_val, X_test, y_train, y_val, y_test,
                                                                    n_units = n_unit,
                                                                    n_epochs= n_epoch,
                                                                    fit_prior=True)
