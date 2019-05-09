@@ -1,0 +1,5 @@
+need to install Keras
+need to get NLTK stopwords (import, then download)
+
+make sure the 3 processed tweet datasets are on the VM
+make sure to have the text-cleaning.py, classification.py and gridsearch.py
