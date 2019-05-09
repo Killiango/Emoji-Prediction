@@ -1,7 +1,4 @@
-
 # coding: utf-8
-
-# In[4]:
 
 
 import numpy as np
@@ -10,25 +7,11 @@ from sklearn.model_selection import KFold, GridSearchCV
 from sklearn.metrics import accuracy_score, f1_score
 from sklearn.utils import shuffle
 
+from sklearn.linear_model import LogisticRegression
+from sklearn.naive_bayes import MultinomialNB
+
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-
-
-# In[3]:
-
-
-X_train = np.loadtxt('X_train_BoW.txt')
-X_test = np.loadtxt('X_test_BoW.txt')
-X_val = np.loadtxt('X_val_BoW.txt')
-
-y_train = np.loadtxt('y_train_BoW.txt')
-y_test = np.loadtxt('y_test_BoW.txt')
-y_val = np.loadtxt('y_val_BoW.txt')
-
-print('Finished loading data! \n')
-
-
-# In[10]:
 
 
 def to_cat_matrix(y):
@@ -44,16 +27,7 @@ def to_cat_matrix(y):
         ind_matrix[i, int(cat)] = 1
     return ind_matrix
 
-# get indicator matrix with one-hot-encoded vectors per label (of all labels)
-y_train = to_cat_matrix(y_train)
-y_val = to_cat_matrix(y_val)
-y_test = to_cat_matrix(y_test)
-
-
-# In[12]:
-
-
-def get_model(hidden_units: int, input_dims: int, n_labels: int):
+def get_model(input_dims: int, hidden_units: int, n_labels: int):
     model = Sequential()
     model.add(Dense(hidden_units, input_dim = input_dims, activation = 'relu'))
     model.add(Dropout(0.1))
@@ -61,10 +35,7 @@ def get_model(hidden_units: int, input_dims: int, n_labels: int):
     adam = keras.optimizers.Adam(lr=0.001, beta_1 = 0.9, beta_2=0.999, epsilon=1e-08, decay=0.0, amsgrad=False)
     model.compile(loss = 'categorical_crossentropy', optimizer = adam, metrics = ['accuracy'])
     return model
-
-
-# In[21]:
-
+    
 
 def probs_to_labels(y_probs):
     num_labels = [np.argmax(pred) for pred in y_probs]
@@ -85,38 +56,47 @@ def accuracy_score(ytrue, ypred):
     accuracy = ratio * 100
     return round(accuracy, 2)
 
+    
+def classification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_epochs, fit_prior=True):
+    n_batches=32
+    
+    # get indicator matrix with one-hot-encoded vectors per label (of all labels)
+    y_train = to_cat_matrix(y_train)
+    y_val = to_cat_matrix(y_val)
+    y_test = to_cat_matrix(y_test)
 
-# ## Start actual model
+    # Build 3 machine learning models: Multi-layer Perceptron (MLP), Logistic Regression, Naive Bayes (MNB)
+    MLP = get_model(X_train.shape[1], n_units, y_train.shape[1])
+    LogReg = LogisticRegression(penalty='l2', class_weight='balanced', random_state=42, solver='lbfgs', max_iter=500, multi_class='multinomial')
+    MNB = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+    
+    print('Models Constructed')
 
-# In[14]:
+    
+    X_train, y_train = shuffle(X_train, y_train)
+    X_val, y_val     = shuffle(X_val, y_val)
+    
+    
+    # Train the models (and validate using the Val set)
+    MLP.fit(X_train, y_train, validation_data=(X_val, y_val), epochs = n_epochs, batch_size = n_batches)
+    LogReg.fit(X_train, y_train)
+    MNB.fit(X_train, y_train)
+    
+    # Get predictions for the test set
+    y_probs_MLP = MLP.predict(X_test)
+    y_preds_MLP = probs_to_labels(y_probs_MLP)
+    f1_MLP = f1_score1(y_true=y_test, y_pred=y_preds_MLP, average='micro')
+    acc_MLP = accuracy_score(y_test, y_preds_MLP)
+    
+    y_probs_LogReg = LogReg.predict(X_test)
+    y_preds_LogReg = probs_to_labels(y_probs_LogReg)
+    f1_LogReg = f1_score1(y_true=y_test, y_pred=y_preds_LogReg, average='micro')
+    acc_LogReg = accuracy_score(y_test, y_preds_LogReg)
 
+    y_probs_MNB = MNB.predict(X_test)
+    y_preds_MNB = probs_to_labels(y_probs_MNB)
+    f1_MNB = f1_score1(y_true=y_test, y_pred=y_preds_MNB, average='micro')
+    acc_MNB = accuracy_score(y_test, y_preds_MNB)
 
-# set number of hidden units, epochs and batch size
-n_units = 50
-n_epochs = 10
-n_batches = 32
-
-
-# In[24]:
-
-
-model = get_model(n_units, X_train.shape[1], 10)
-print('Model Constructed')
-
-
-# In[16]:
-
-
-model.fit(X_train, y_train, validation_data=(X_val, y_val) epochs = n_epochs, batch_size = n_batches)
-
-
-# In[25]:
-
-
-# get predictions
-y_probs_test = model.predict(X_test)
-y_preds_test = probs_to_labels(y_probs_test)
-
-f1= f1_score1(y_true=y_test, y_pred=y_preds_test, average='micro')
-print('F1 Score: %.3f' % (f1))
-
+    
+    return (f1_MLP, acc_MLP), (f1_LogReg, acc_LogReg), (f1_MNB, acc_MNB)
