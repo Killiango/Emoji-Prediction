@@ -36,6 +36,9 @@ for n_unit in n_units_hyper:
             X_train, X_val, X_test, y_train, y_val, y_test = text_cleaning(
                 n_gram = n_gram, min_df = min_df, lower = True, use_stopwords = False, stemmer = False)
 
+            
+            print('Finished Text Cleaner')
+            
             # Machine Learning Classification
             MLP_scores, Log_Reg_scores, MNB_scores = classification(X_train, X_val, X_test, y_train, y_val, y_test,
                                                                    n_units = n_unit,
