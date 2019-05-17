@@ -161,6 +161,14 @@ def bag_of_words(train, test, val, ngram = (1,1), vocab = None, max_df = 1, min_
     You can pass a vocabulary to this function, which may then be used for CountVectorizer. 
     If you do not pass a vocabulary to this function, CountVectorizer will create a vocabulary itself.
     """ 
+    
+    # Fix UTF error on Google VM
+    train = [unicode(str, errors='ignore') for str in train]
+    test = [unicode(str, errors = 'ignore') for str in test] 
+    val = [unicode(str, errors='ignore') for str in val]
+    
+    
+    
     # initialize vectorizer (word-ngram representation)
     vectorizer = TfidfVectorizer(encoding = 'utf-8', ngram_range = ngram, analyzer = 'word', vocabulary = vocab, 
                                  max_df=max_df, min_df = min_df, sublinear_tf = sublin_tf)

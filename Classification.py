@@ -29,7 +29,7 @@ def to_cat_matrix(y):
 def get_model(input_dims, hidden_units, n_labels):
     model = Sequential()
     model.add(Dense(hidden_units, input_dim = input_dims, activation = 'relu'))
-    model.add(Dropout(0.1))
+    model.add(Dropout(0.2))
     model.add(Dense(n_labels, activation = 'softmax'))
     adam = keras.optimizers.Adam(lr=0.001, beta_1 = 0.9, beta_2=0.999, epsilon=1e-08, decay=0.0, amsgrad=False)
     model.compile(loss = 'categorical_crossentropy', optimizer = adam, metrics = ['accuracy'])
