@@ -1,6 +1,4 @@
 # coding: utf-8
-
-
 import numpy as np
 import keras
 from sklearn.model_selection import KFold, GridSearchCV
@@ -9,6 +7,7 @@ from sklearn.utils import shuffle
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.naive_bayes import MultinomialNB
+from sklearn.svm import SVC
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
@@ -27,7 +26,7 @@ def to_cat_matrix(y):
         ind_matrix[i, int(cat)] = 1
     return ind_matrix
 
-def get_model(input_dims: int, hidden_units: int, n_labels: int):
+def get_model(input_dims, hidden_units, n_labels):
     model = Sequential()
     model.add(Dense(hidden_units, input_dim = input_dims, activation = 'relu'))
     model.add(Dropout(0.1))
@@ -56,47 +55,58 @@ def accuracy_score(ytrue, ypred):
     accuracy = ratio * 100
     return round(accuracy, 2)
 
-    
-def classification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_epochs, fit_prior=True):
+
+def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_epochs):
     n_batches=32
-    
+
     # get indicator matrix with one-hot-encoded vectors per label (of all labels)
     y_train = to_cat_matrix(y_train)
     y_val = to_cat_matrix(y_val)
     y_test = to_cat_matrix(y_test)
 
-    # Build 3 machine learning models: Multi-layer Perceptron (MLP), Logistic Regression, Naive Bayes (MNB)
     MLP = get_model(X_train.shape[1], n_units, y_train.shape[1])
-    LogReg = LogisticRegression(penalty='l2', class_weight='balanced', random_state=42, solver='lbfgs', max_iter=250, multi_class='multinomial')
-    MNB = MultinomialNB(alpha=1.0, fit_prior=True, class_prior=None)
+    print('Neural Net model constructed')
     
-    print('Models Constructed')
+    X_train, y_train = shuffle(X_train, y_train)
+    X_val, y_val     = shuffle(X_val, y_val)
+ 
+    MLP.fit(X_train, y_train, validation_data=(X_val, y_val), epochs = n_epochs, batch_size = n_batches)
+    
+    
+    # Get predictions on the test set
+    y_probs_MLP = MLP.predict(X_test)
+    y_preds_MLP = probs_to_labels(y_probs_MLP)
+    f1_MLP = f1_score(y_true=y_test, y_pred=y_preds_MLP, average='micro')
+    acc_MLP = accuracy_score(y_test, y_preds_MLP)
+    
+    return (f1_MLP, acc_MLP)
+    
+def classification(X_train, X_val, X_test, y_train, y_val, y_test):
+    
+    
+    # Build 3 machine learning models: Multi-layer Perceptron (MLP), Logistic Regression, Support Vector Machine (SVM)
+    LogReg = LogisticRegression(penalty='l2', class_weight='balanced', random_state=42, solver='lbfgs', max_iter=50, multi_class='multinomial')
+    SVM = SVC(gamma = 'auto', kernel = 'linear')
+    print('Sk learn classifiers Constructed')
 
     
     X_train, y_train = shuffle(X_train, y_train)
     X_val, y_val     = shuffle(X_val, y_val)
-    
-    
+ 
     # Train the models (and validate using the Val set)
-    MLP.fit(X_train, y_train, validation_data=(X_val, y_val), epochs = n_epochs, batch_size = n_batches)
     LogReg.fit(X_train, y_train)
-    MNB.fit(X_train, y_train)
+    SVM.fit(X_train, y_train)
     
     # Get predictions for the test set
-    y_probs_MLP = MLP.predict(X_test)
-    y_preds_MLP = probs_to_labels(y_probs_MLP)
-    f1_MLP = f1_score1(y_true=y_test, y_pred=y_preds_MLP, average='micro')
-    acc_MLP = accuracy_score(y_test, y_preds_MLP)
-    
     y_probs_LogReg = LogReg.predict(X_test)
     y_preds_LogReg = probs_to_labels(y_probs_LogReg)
-    f1_LogReg = f1_score1(y_true=y_test, y_pred=y_preds_LogReg, average='micro')
+    f1_LogReg = f1_score(y_true=y_test, y_pred=y_preds_LogReg, average='micro')
     acc_LogReg = accuracy_score(y_test, y_preds_LogReg)
 
-    y_probs_MNB = MNB.predict(X_test)
-    y_preds_MNB = probs_to_labels(y_probs_MNB)
-    f1_MNB = f1_score1(y_true=y_test, y_pred=y_preds_MNB, average='micro')
-    acc_MNB = accuracy_score(y_test, y_preds_MNB)
+    y_probs_SVM = SVM.predict(X_test)
+    y_preds_SVM = probs_to_labels(y_probs_SVM)
+    f1_SVM = f1_score(y_true=y_test, y_pred=y_preds_SVM, average='micro')
+    acc_SVM = accuracy_score(y_test, y_preds_SVM)
 
     
-    return (f1_MLP, acc_MLP), (f1_LogReg, acc_LogReg), (f1_MNB, acc_MNB)
+    return (f1_LogReg, acc_LogReg), (f1_SVM, acc_SVM)
