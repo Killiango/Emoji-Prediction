@@ -62,7 +62,7 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_
     # get indicator matrix with one-hot-encoded vectors per label (of all labels)
     y_train = to_cat_matrix(y_train)
     y_val = to_cat_matrix(y_val)
-    y_test = to_cat_matrix(y_test)
+    #y_test = to_cat_matrix(y_test)
 
     MLP = get_model(X_train.shape[1], n_units, y_train.shape[1])
     print('Neural Net model constructed')
@@ -76,8 +76,13 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, n_
     # Get predictions on the test set
     y_probs_MLP = MLP.predict(X_test)
     y_preds_MLP = probs_to_labels(y_probs_MLP)
-    f1_MLP = f1_score(y_true=y_test, y_pred=y_preds_MLP, average='micro')
+    micro_f1_MLP = f1_score(y_true=y_test, y_pred=y_preds_MLP, average='micro')
+    macro_f1_MLP = f1_score(y_true=y_test, y_pred=y_preds_MLP, average='micro')
+
     acc_MLP = accuracy_score(y_test, y_preds_MLP)
+    
+    print('Micro F1: ', micro_f1_MLP)
+    print('Macro F1: ', macro_f1_MLP)
     
     return (f1_MLP, acc_MLP)
     

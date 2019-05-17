@@ -218,6 +218,7 @@ def text_cleaning(n_gram, lower = True, use_stopwords = False, stemmer = False,
     X_train, X_test, X_val = bag_of_words(cleaned_train_data, cleaned_test_data, cleaned_val_data, ngram = n_gram, vocab = vocab,
                                           max_df = max_df, min_df = min_df, sublin_tf = sublinear_tf)
 
+    print('Completed the Vectorizer')
     # Vielleicht AbsScaler einbauen
     
     
@@ -228,6 +229,8 @@ def text_cleaning(n_gram, lower = True, use_stopwords = False, stemmer = False,
         X_test = svd.transform(X_test)
         X_val = svd.transform(X_val)
     
+    print('Completed SVD')
+   
     y_train = emoji_to_int(train_labels, emoji_map)
     y_test = emoji_to_int(test_labels,emoji_map)
     y_val = emoji_to_int(val_labels,emoji_map)
