@@ -12,9 +12,10 @@ class GRU_NET():
 
     #embedding_dim = 300
     
-    def __init__(self, vocab_size: int, hidden_units: int, n_features: int, embedding_matrix, n_labels: int, 
+    def __init__(self, vocab_size: int, max_length: int, hidden_units: int, n_features: int, embedding_matrix, n_labels: int, 
         optimizer, dropout = False):
         self.vocab_size = vocab_size
+        self.max_length = max_length # max document length across the entire corpus
         self.hidden_units = hidden_units
         self.n_features = n_features
         self.embedding_matrix = embedding_matrix
@@ -29,7 +30,7 @@ class GRU_NET():
         self.model = Sequential()
         
         self.model.add(Embedding(vocab_size + 2, n_features, weights = [embedding_matrix], 
-                                 trainable = False, mask_zero = True))
+                                 trainable = False, input_length = max_length, mask_zero = True))
         
         self.model.add(GRU(hidden_units, activation='relu', recurrent_activation='hard_sigmoid', 
                            return_sequences = True))    
@@ -54,9 +55,10 @@ class GRU_NET():
 
 class LSTM_NET():
 
-    def __init__(self, vocab_size: int, hidden_units: int, n_features: int, embedding_matrix, n_labels: int, 
+    def __init__(self, vocab_size: int, max_length: int, hidden_units: int, n_features: int, embedding_matrix, n_labels: int, 
         optimizer, dropout = False):
         self.vocab_size = vocab_size
+        self.max_length = max_length # max document length across the entire corpus
         self.hidden_units = hidden_units
         self.n_features = n_features
         self.embedding_matrix = embedding_matrix
@@ -70,7 +72,7 @@ class LSTM_NET():
         print('Build model...')
         self.model = Sequential()
 
-        self.model.add(Embedding(vocab_size + 2, n_features, weights = [embedding_matrix], 
+        self.model.add(Embedding(vocab_size + 2, n_features, weights = [embedding_matrix], input_length = max_length,
                                  trainable = False, mask_zero = True))
         
 
