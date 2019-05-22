@@ -11,7 +11,7 @@ from sklearn.svm import SVC
 
 from keras.models import Sequential
 from keras.layers import Dense, Dropout
-
+from keras.callbacks import EarlyStopping, ModelCheckpoint
 
 def to_cat_matrix(y):
     """ 
