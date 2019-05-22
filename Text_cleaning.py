@@ -47,8 +47,8 @@ def keep_top_10(data, top_10):
             idx_drop.append(index)
     return data.drop(data.index[idx_drop])
 
-# Potential problem: if min_df > 1, then maybe we should also filter all tweets that have less than 2 words of the vocab???
-def tweets_cleaning(tweets, labels, train = False, lowercase = True, use_stopwords = False, use_unigrams = True, use_bigrams = False, stemming = False, min_df = 1):
+def tweets_cleaning(tweets, labels, lowercase = True, use_stopwords = False, use_unigrams = True, use_bigrams = False, stemming = False, min_df = 1, train = False):
+    
     """
     Text cleaning function that performs all necessary text preprocessing steps.
     Function only keeps characters, that are alphanumerical (non-alphanumerical values are discarded).
@@ -57,6 +57,7 @@ def tweets_cleaning(tweets, labels, train = False, lowercase = True, use_stopwor
     Stemming is performed to only keep the stem of each word token but not any other deviated form. 
     Stop words (i.e., words that occur more frequently than other words in a given corpus) are removed.
     """
+    
      # initialize Lancaster stemmer
     if stemming:
         st = LancasterStemmer()
@@ -85,7 +86,6 @@ def tweets_cleaning(tweets, labels, train = False, lowercase = True, use_stopwor
             else re.sub('[,.;\-_:/\n\t]+', ' ', word) for word in tweet.split()])
 
         tweet = tweet.split(" ")
-
         cleaned_tweet = []
         # Cleans the tweets of unwanted characters
         for word in tweet:
@@ -124,13 +124,10 @@ def tweets_cleaning(tweets, labels, train = False, lowercase = True, use_stopwor
 
         # only append tweets with more than 1 word per tweet
         if len(cleaned_tweet) > 1:
-
+            
             if train and use_bigrams:
-
                 bigrams = [' '.join([cleaned_tweet[i-1], cleaned_tweet[i]]) for i, _ in enumerate(cleaned_tweet) if i > 0]
-
                 for bigram in bigrams:
-
                     if bigram in bigrams_dict:
                         bigrams_dict[bigram] += 1
                     else:
@@ -152,7 +149,7 @@ def tweets_cleaning(tweets, labels, train = False, lowercase = True, use_stopwor
     assert len(cleaned_data) == len(cleaned_labels)
     return cleaned_data, cleaned_labels, sorted(vocab)    
 
-def bag_of_words(train, test, val, ngram = (1,1), vocab = None, max_df = 1, min_df = 1, sublin_tf = True):
+def bag_of_words(train, test, val, ngram = (1,1), vocab = None, sublin_tf = True):
     """
     Create a count (!) based bag-of-words unigram or bigram representation of provided tweets.
     Ngram is set to unigram by default. If bigram bag-of-words should be created, pass tuple (2, 2).
@@ -168,10 +165,9 @@ def bag_of_words(train, test, val, ngram = (1,1), vocab = None, max_df = 1, min_
     val = [unicode(str, errors='ignore') for str in val]
     
     
-    
     # initialize vectorizer (word-ngram representation)
     vectorizer = TfidfVectorizer(encoding = 'utf-8', ngram_range = ngram, analyzer = 'word', vocabulary = vocab, 
-                                 max_df=max_df, min_df = min_df, sublinear_tf = sublin_tf)
+                                 sublinear_tf = sublin_tf)
     train_BoW = vectorizer.fit_transform(train).toarray()
     test_BoW = vectorizer.transform(test).toarray()
     val_BoW = vectorizer.transform(val).toarray()
@@ -179,7 +175,7 @@ def bag_of_words(train, test, val, ngram = (1,1), vocab = None, max_df = 1, min_
     return train_BoW, test_BoW, val_BoW
 
 def text_cleaning(n_gram, lower = True, use_stopwords = False, stemmer = False,
-                  max_df = 1, min_df = 1, sublinear_tf =  True, use_SVD = True):
+                  min_df = 1, sublinear_tf =  True, use_SVD = True):
     # Read Files
     train_proc = pd.read_csv('train_set_processed.csv')
     val_proc = pd.read_csv('val_set_processed.csv')
@@ -199,12 +195,12 @@ def text_cleaning(n_gram, lower = True, use_stopwords = False, stemmer = False,
     
     cleaned_train_data, train_labels, vocab = tweets_cleaning(train_data.text,                                                      
                                                         train_data.label, 
-                                                        train = True,
                                                         lowercase = lower,
                                                         use_stopwords = use_stopwords,
                                                         use_unigrams = use_unigrams, 
                                                         use_bigrams = use_bigrams,                                                       
-                                                        min_df = min_df)
+                                                        min_df = min_df,
+                                                        train = True)
 
     cleaned_test_data, test_labels, _ = tweets_cleaning(test_data.text, 
                                                            test_data.label, 
@@ -223,10 +219,11 @@ def text_cleaning(n_gram, lower = True, use_stopwords = False, stemmer = False,
     print("Validation: {}\n".format(len(cleaned_val_data)))
     print("Number of unique tokens in the vocabulary: {}\n".format(len(vocab)))
 
-    X_train, X_test, X_val = bag_of_words(cleaned_train_data, cleaned_test_data, cleaned_val_data, ngram = n_gram, vocab = vocab,
-                                          max_df = max_df, min_df = min_df, sublin_tf = sublinear_tf)
+    X_train, X_test, X_val = bag_of_words(cleaned_train_data, cleaned_test_data, cleaned_val_data, ngram = n_gram, 
+                                          vocab = vocab, sublin_tf = sublinear_tf)
 
     print('Completed the Vectorizer')
+    
     # Vielleicht AbsScaler einbauen
     
     
