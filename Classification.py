@@ -65,7 +65,7 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, dr
     y_train = to_cat_matrix(y_train)
     y_val = to_cat_matrix(y_val)
 
-    MLP = get_model(X_train.shape[1], n_units, y_train.shape[1], dropout)
+    MLP = get_model(n_units, X_train.shape[1], y_train.shape[1], dropout)
     print('Neural Net model constructed')
      
 
