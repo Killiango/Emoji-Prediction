@@ -94,6 +94,6 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, dr
     acc_top1 = accuracy_top_n(y_test, y_probs, 1)
     acc_top3 = accuracy_top_n(y_test, y_probs, 3)
     
-    print(classification_report(y_test, y_preds, target_names = list(range(0, 10))))
+    print(classification_report(y_test, y_preds, target_names = list([str(i) for i in range(0, 10)])))
     
     return (f1, acc_top1, acc_top3)
