@@ -5,8 +5,8 @@ import numpy as np
 import time
 
 # all hyper parameters
-n_grams_hyper  = [(1,2), (2,2)] # (1,1)
-min_df_hyper   = [2,3]
+n_grams_hyper  = [(1,1), (1,2), (2,2)]
+min_df_hyper   = [2]
 
 lowercase = True
 use_stopwords = False
@@ -14,8 +14,8 @@ use_stemmer = False
 use_sublinear_tf = True
 use_SVD = False
 
-dropout_hyper = [0.4, 0.5]
-n_units_hyper  = [50, 60]
+dropout_hyper = [0.4]
+n_units_hyper  = [60]
 n_epoch = 8
 
 
@@ -48,7 +48,6 @@ for n_gram in n_grams_hyper:
                 print()
 
                 MLP_scores = NNclassification(X_train, X_val, X_test, y_train, y_val, y_test,                                                                   n_units = n_unit, dropout = drop, n_epochs = n_epoch)
-
                 all_MLP_scores.append(MLP_scores)
                 
                 

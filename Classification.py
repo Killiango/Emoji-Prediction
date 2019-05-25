@@ -41,6 +41,23 @@ def probs_to_labels(y_probs):
     return num_labels
 
 
+def accuracy_top_n(y_true, y_preds, top_n = 3):
+    """
+    If the correct label / emoji is among the top n (e.g., two, three) predictions,
+    we consider the prediction as correctly labeled.
+    """
+    n_correct = 0
+    n_total = 0
+    
+    for i, pred in enumerate(y_preds):
+        top_n_preds = np.argsort(pred)[-top_n:]       
+        if y_true[i] in top_n_preds:
+            n_correct += 1
+        n_total += 1
+        
+    ratio = n_correct / n_total
+    return round(ratio, 3)
+
 def accuracy_top_n(y_true, y_probs, top_n = 3):
     """
     If the correct label / emoji is among the top n (e.g., two, three) predictions,
@@ -69,8 +86,8 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, dr
     print('Neural Net model constructed')
      
 
-    es = EarlyStopping(monitor='val_acc', mode='max', verbose=1)
-    mc = ModelCheckpoint('best_model.h5', monitor='val_acc', mode='max', verbose=1, save_best_only=True)
+    es = EarlyStopping(monitor='val_loss', mode='min', verbose=1)
+    mc = ModelCheckpoint('best_model.h5', monitor='val_loss', mode='min', verbose=1, save_best_only=True)
 
     X_train, y_train = shuffle(X_train, y_train)
     X_val, y_val     = shuffle(X_val, y_val)
@@ -85,15 +102,20 @@ def NNclassification(X_train, X_val, X_test, y_train, y_val, y_test, n_units, dr
 
     # get predictions
     y_probs = saved_model.predict(X_test)
-    
+        
     # convert predictions to labels
     y_preds = probs_to_labels(y_probs)
 
     # calculate scores
     f1 = f1_score(y_true=y_test, y_pred=y_preds, average='weighted')
     acc_top1 = accuracy_top_n(y_test, y_probs, 1)
+    acc_top2 = accuracy_top_n(y_test, y_probs, 2)
     acc_top3 = accuracy_top_n(y_test, y_probs, 3)
     
-    print(classification_report(y_test, y_preds, target_names = list([str(i) for i in range(0, 10)])))
+    print('Acc top1: ', acc_top1)
+    print('Acc top2: ', acc_top2)
+    print('Acc top3: ', acc_top3)
     
-    return (f1, acc_top1, acc_top3)
+    print(classification_report(y_test, y_preds, target_names = [str(i) for i in range(0, 10)]))
+    
+    return (f1, acc_top1, acc_top2,acc_top3)
