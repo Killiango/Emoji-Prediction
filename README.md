@@ -1,6 +1,6 @@
 # Emoji Prediction
 
-In this repository, we make our personal code for an emoji prediction task publicly available. However, please cite us, if you want to include your code for a research paper, course work or any industry related product. Thank you!
+In this repository, we make our personal code for an emoji prediction task publicly available. However, please cite us, if you want to use our code for research, course work or any industry related product. Thank you!
 
 We started this project as a course work for one of our first year's classes in the MSc IT and Cognition at the University of Copenhagen (UCPH). We aimed at predicting emojis in Twitter tweets solely given text data. In this study, owing to simplicity the emoji was required to be at the end of a Twitter tweet.
 
