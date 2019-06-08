@@ -6,4 +6,4 @@ We started this project as a course work for one of our first year's classes in 
 
 So far we achieved a solid 48% F1-score using a simple word n-gram text based approach with term frequency-inverse document frequency (tf-idf) weighting. Our machine learning algorithm of choice, was a Multi-layer Perceptron (MLP) with 50-60 hidden units. We implemented the MLP using Tensorflow's high-level deep learning library Keras.
 
-In follow-up studies, we would like to develop a multi-modal classifier using both image and text data. In this endeavour, we will use dense word embeddings instead of sparse word vectors and deploy either Convolutional Neural Networks (CNNs) or LSTM-Recurrent Neural Networks (LSTMs).
+In follow-up studies, we would like to develop a multi-modal classifier using both image and text data. In this endeavour, we will use dense word embeddings instead of sparse word vectors and deploy either Convolutional Neural Networks (CNNs) or LSTM-Recurrent Neural Networks (LSTMs). Stay tuned!
