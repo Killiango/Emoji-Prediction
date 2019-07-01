@@ -41,3 +41,7 @@ y_val_BoW.txt
 *.pyc
 .ipynb_checkpoints/text_cleaning_andML-checkpoint.ipynb
 .ipynb_checkpoints/Embeddings-checkpoint.ipynb
+glove.6B.100d.txt
+glove.6B.200d.txt
+glove.6B.300d.txt
+glove.6B.50d.txt
