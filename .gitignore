@@ -39,3 +39,5 @@ y_val_BoW.txt
 .ipynb_checkpoints/Text cleaning-checkpoint.ipynb
 .ipynb_checkpoints/Classification-checkpoint.ipynb
 *.pyc
+.ipynb_checkpoints/text_cleaning_andML-checkpoint.ipynb
+.ipynb_checkpoints/Embeddings-checkpoint.ipynb
